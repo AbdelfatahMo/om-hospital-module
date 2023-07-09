@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="odoo_playground_view_form" model="ir.ui.view">
+        <field name="name">odoo_playground.view.form</field>
+        <field name="model">odoo.playground</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="model_id" />
+                        <field name="code" widget="ace" options="{'mode':'python'}" />
+                    </group>
+                    <group>
+                        <button name="action_execute" string="Execute" type="object"
+                            class="btn-primary" data-hotkey="q" />
+                    </group>
+                    <group>
+                        <field name="result" />
+                    </group>
+                    <footer>
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="odoo_playground_action" model="ir.actions.act_window">
+        <field name="name">Odoo Playground</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">odoo.playground</field>
+        <field name="view_mode">form</field>
+        <!-- target default current window / new window for pop up -->
+        <field name="target" >inline</field>
+    </record>
+
+</odoo>

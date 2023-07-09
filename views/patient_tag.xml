@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="patient_tag_view_form" model="ir.ui.view">
+            <field name="name">Patient_tag.view.form</field>
+            <field name="model">patient.tag</field>
+            <field name="arch" type="xml">
+                <form string="">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" />
+                                <field name="sequence" />
+                            </group>
+                            <group>
+                                <field name="color" widget="color_picker" />
+                                <field name="color_2" widget="color"
+                                    groups="base.group_no_one"
+                                />
+                                <field name="active" widget="boolean_toggle" />
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="patient_tag_view_tree" model="ir.ui.view">
+            <field name="name">Patient_tag_view_tree.view.tree</field>
+            <field name="model">patient.tag</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name" />
+                    <field name="color" widget="color_picker" />
+                    <!-- groups="base.group_no_one" TO only appear in debug mode -->
+                    <field name="color_2" widget="color" groups="base.group_no_one" />
+                    <field name="active" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="patient_tag_act_window" model="ir.actions.act_window">
+            <field name="name">Patient tag</field>
+            <field name="res_model">patient.tag</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Enter your first!!
+                </p>
+
+            </field>
+        </record>
+
+
+    </data>
+</odoo>

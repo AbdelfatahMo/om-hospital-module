@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+
+
+        <!-- Tree for Patient Details -->
+        <record id="patient_details_tree" model="ir.ui.view">
+            <field name="name">patient_details.tree</field>
+            <field name="model">hospital.patient</field>
+            <field name="arch" type="xml">
+                <!-- Export records on xlsx fromat > export_xlsx display or not 0 , 1 -->
+                <tree export_xlsx="0">
+                    <field name="name" string="Patient Name" />
+                    <field name="ref" />
+                    <field name="age" />
+                    <field name="gender" />
+                    <field name="appointment_count" />
+                    <field name="tag_ids" widget="many2many_tags"
+                        options="{'color_field':'color','no_create_edit': True}"
+                    />
+                    <field name="note" />
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form for Patient Details -->
+        <record id="patient_details_form" model="ir.ui.view">
+            <field name="name">patient_details.form</field>
+            <field name="model">hospital.patient</field>
+            <field name="arch" type="xml">
+                <form string="Patient Details">
+                    <header>
+                    </header>
+                    <sheet>
+                        <field name="image" widget="image" class="oe_avatar" />
+                        <div class="oe_title">
+                            <h1>
+                                <field name="ref" />
+                            </h1>
+                            <h2>
+                                <label for='name' string="Name" class="oe_edit_only" />
+                                <field name="name" />
+                            </h2>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="national_id" />
+                                <field name="date_of_birth" />
+                                <field name="appointment_count" />
+                            </group>
+                            <group>
+                                <field name="age" />
+                                <field name="gender" invisible="context.get('hide_gender')" widget="radio"/>
+                                <field name="tag_ids" widget="many2many_tags"
+                                    options="{'color_field':'color'}" />
+                                <field name='active' invisible="1" />
+                            </group>
+                            <group string="Other Information" name="other_info">
+                                <field name="parent" attrs="{ 'invisible':[('age','>',17)] }" />
+                                <field name="marital_state" />
+                                <field name="partner_name"
+                                    attrs="{'readonly':[('marital_state','in',('single'))],
+                                    'required':[('marital_state','in',('married'))]}" />
+                            </group>
+                            <group>
+                                <field name="note" />
+                            </group>
+                        </group>
+                        <notebook>
+                            <page name="Appointments" string="Appointments">
+                                <field name="appointment_ids" />
+                            </page>
+                        </notebook>
+                    </sheet>
+
+                    <!-- Chatter -->
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" groups="base.group_user" />
+                        <field name="activity_ids" />
+                        <field name="message_ids" />
+                    </div>
+                </form>
+            </field>
+        </record>
+
+
+        <!-- Search for Patient Details -->
+        <record id="patient_details_search" model="ir.ui.view">
+            <field name="name">patient_details.search</field>
+            <field name="model">hospital.patient</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name" string="Patient Name or Reference"
+                        filter_domain="['|',('name', 'ilike', self),('ref','ilike',self)]"
+                    />
+                    <field name="ref" />
+                    <field name="age" />
+                    <field name="gender" />
+                    <!-- Filters -->
+                    <!-- Gender -->
+                    <filter name="filter_male" string="Male" domain="[('gender', '=', 'male')]" />
+                    <filter name="filter_female" string="Female"
+                        domain="[('gender', '=', 'female')]" />
+                    <filter name="filter_archived" string='Archived'
+                        domain="[('active', '=', False)]" />
+                    <!-- Age -->
+                    <separator />
+                    <filter name="filter_kids" string="Kids" domain="[('age', '&lt;=', 5)]" />
+
+                    <!-- Group by -->
+                    <group expand="0" string="Group By">
+                        <!-- Gender -->
+                        <filter name="group_by_gender" string="Gender"
+                            context="{'group_by':'gender'}" help="" />
+
+                    </group>
+                    <searchpanel>
+                        <field name="gender" string="Gender" enable_counters="1" icon="fa-users"
+                            select="multi" />
+                    </searchpanel>
+
+                </search>
+            </field>
+        </record>
+
+
+        <!-- actions opening views on models -->
+        <record id="patient_act_window" model="ir.actions.act_window">
+            <field name="type">ir.actions.act_window</field>
+            <field name="name">Patients</field>
+            <field name="res_model">hospital.patient</field>
+            <field name="view_mode">tree,form</field>
+            <!-- Filter for male and age greater than 10 -->
+            <!-- <field name="context">{'default_gender':'male',
+                    'search_default_filter_male':1,'search_default_group_by_gender':1}</field>
+                    <field name="domain">[('gender','=','male'),('age','&gt;',10)]</field> -->
+
+            <!-- Filter for kids and age less than 10 -->
+            <!-- <field
+            name="domain">['|',('gender','=','female'),('gender','=','male'),('age','&lt;=',10)]</field> -->
+            <field name="help" type='html'>
+                <p class='o_view_nocontent_smiling_face'>
+                    Enter first patient details!
+                </p>
+            </field>
+        </record>
+
+
+    </data>
+</odoo>
