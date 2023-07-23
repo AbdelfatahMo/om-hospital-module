@@ -1,5 +1,6 @@
 from odoo import models, fields, api,_
 from datetime import date
+from dateutil import relativedelta
 from odoo.exceptions import ValidationError
 
 class CancelAppointmentWizard(models.TransientModel):
@@ -27,7 +28,9 @@ class CancelAppointmentWizard(models.TransientModel):
     cancel_date = fields.Date(string="Cancellation Date")
 
     def action_cancel(self):
-        if self.appointment_id.booking_date==fields.Date.today():
+        allowed_cancel_days = self.env["res.config.settings"].get_param("om_hospital.cancel_days")
+        allowed_cancel_date=self.appointment_id.booking_date+relativedelta.relativedelta(days=int(allowed_cancel_days))
+        if date.today>allowed_cancel_date:
             raise ValidationError(_("can't cancel this appointment"))
         self.appointment_id.state="cancel"
         return

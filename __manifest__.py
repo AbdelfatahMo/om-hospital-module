@@ -31,6 +31,7 @@
         'views/odoo_playground_view.xml',
         'views/res_config_settings_views.xml',
         'views/appointment.xml',
+        'views/operation_view.xml',
         'views/patient_tag.xml',
         'views/hospital_menu.xml',
         'report/patient_card_template.xml',

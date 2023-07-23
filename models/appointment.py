@@ -72,6 +72,11 @@ class HospitalAppointment(models.Model):
         string='Doctor',
     )
 
+    operation_id = fields.Many2one(
+        comodel_name="hospital.operation",
+        string="Operation"
+    )
+
     pharmacy_lines_ids = fields.One2many(
         string='Medicine',
         comodel_name='appointment.pharmacy.lines',

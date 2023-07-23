@@ -11,6 +11,7 @@
         <field name="binding_type">report</field>
     </record>
 
+
     <record id="action_patient_card_report" model="ir.actions.report">
         <field name="name">Hospital Card</field>
         <field name="model">hospital.patient</field>

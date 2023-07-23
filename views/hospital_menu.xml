@@ -36,18 +36,23 @@
     name="Configurations"
     parent="hospital_root_menu"
     sequence="2">
-    <!-- Sub  menu Hospital -> Configurations -> Settings -->
+    
+    <!-- Settings -->
     <menuitem id="hospital_config_settings_menu"
       name="Settings" sequence="0"
-      action="hospital_config_settings_action"
-      groups="base.group_system"></menuitem>
-    <!-- Sub  menu Hospital -> Configurations -> Configurations -->
+      action="hospital_config_settings_action" />
+    <!-- Tags -->
     <menuitem
       id="hospital_patient_tag_menu"
       name="Tags"
       action="patient_tag_act_window"
-      sequence="1"></menuitem>
-
+      sequence="1" />
+    <!-- Operations -->
+    <menuitem
+      id="hospital_operation_menu"
+      name="Operations"
+      action="action_id"
+      sequence="2" />
 
   </menuitem>
 
