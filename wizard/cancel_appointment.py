@@ -28,9 +28,13 @@ class CancelAppointmentWizard(models.TransientModel):
     cancel_date = fields.Date(string="Cancellation Date")
 
     def action_cancel(self):
-        allowed_cancel_days = self.env["res.config.settings"].get_param("om_hospital.cancel_days")
+        allowed_cancel_days = self.env["ir.config_parameter"].get_param("om_hospital.cancel_days")
         allowed_cancel_date=self.appointment_id.booking_date+relativedelta.relativedelta(days=int(allowed_cancel_days))
-        if date.today>allowed_cancel_date:
+        if date.today() > allowed_cancel_date:
             raise ValidationError(_("can't cancel this appointment"))
         self.appointment_id.state="cancel"
-        return
+        # Reload page to viusal changes to page
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'reload',
+        }

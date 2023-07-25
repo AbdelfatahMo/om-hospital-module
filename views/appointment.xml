@@ -4,7 +4,6 @@
     <data>
 
         <!-- Activity view -->
-
         <record id="appointment_view_activity" model="ir.ui.view">
             <field name="name">Appointment.view.activity</field>
             <field name="model">hospital.appointment</field>
@@ -105,7 +104,7 @@
                             states="draft" class="oe_highlight" />
                         <button name="action_draft"
                             type="object" string="Draft"
-                            states="in_consultation,cancel" class="oe_highlight" />
+                            states="in_consultation,cancel,done" class="oe_highlight" />
                         <button name="action_done"
                             type="object" string="Mark As Done"
                             states="in_consultation" class="oe_highlight" data-hotkey="v" />
@@ -132,6 +131,7 @@
                                 <field name="doctor_id" widget="many2one_avatar" />
                                 <field name="ref" force_save="1" />
                                 <field name="gender" />
+                                <field name="operation_id"/>
                             </group>
 
                             <group>
@@ -212,7 +212,21 @@
                 </p>
             </field>
         </record>
-
+        
+        <!-- Mark as Done action server -->
+        <record id="action_mark_as_done" model="ir.actions.server">
+            <field name="name">Mark as Done</field>
+            <field name="model_id" ref="om_hospital.model_hospital_appointment"/>
+            <field name="binding_model_id" ref="om_hospital.model_hospital_appointment"/>
+            <!-- Specify  for only tree view -->
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">
+                for record in records:
+                    if record.state == 'in_consultation':
+                        record.action_done()
+            </field>
+        </record>
     </data>
 
 </odoo>

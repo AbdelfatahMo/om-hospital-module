@@ -1,3 +1,4 @@
+from datetime import date
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 
@@ -83,7 +84,7 @@ class HospitalAppointment(models.Model):
         inverse_name='appointment_id',
     )
 
-    hide_sales_price = fields.Boolean()
+    hide_sales_price = fields.Boolean()         
 
     @api.onchange('patient_id')
     def _onchange_patient_id(self):

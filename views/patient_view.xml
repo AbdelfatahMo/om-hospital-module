@@ -13,9 +13,9 @@
                 <tree export_xlsx="0">
                     <field name="name" string="Patient Name" />
                     <field name="ref" />
-                    <field name="age" />
+                    <field name="age" avg="Avarage of Patient ages" />
                     <field name="gender" />
-                    <field name="appointment_count" />
+                    <field name="appointment_count" sum="Total Appointments" />
                     <field name="tag_ids" widget="many2many_tags"
                         options="{'color_field':'color','no_create_edit': True}"
                     />
@@ -33,6 +33,11 @@
                     <header>
                     </header>
                     <sheet>
+                        <div class="alert alert-info text-center o_form_header " role="alert"
+                            attrs="{'invisible':[('is_birthday','=',False)]}">
+                            <a class="close" data-dismiss="alert" href="#">X</a>
+                            <strong>Today is the birthday</strong>
+                        </div>
                         <field name="image" widget="image" class="oe_avatar" />
                         <div class="oe_title">
                             <h1>
@@ -44,27 +49,32 @@
                             </h2>
                         </div>
                         <group>
-                            <group>
+                            <group string="Patient personal info">
                                 <field name="national_id" />
                                 <field name="date_of_birth" />
                                 <field name="appointment_count" />
+                                <field name="is_birthday" invisible="1" />
                             </group>
-                            <group>
+                            <group string="_" >
                                 <field name="age" />
-                                <field name="gender" invisible="context.get('hide_gender')" widget="radio"/>
+                                <field name="gender" invisible="context.get('hide_gender')"
+                                    widget="radio" />
                                 <field name="tag_ids" widget="many2many_tags"
                                     options="{'color_field':'color'}" />
                                 <field name='active' invisible="1" />
                             </group>
+                            <group string="Contact info">
+                                <field name="phone" widget="phone" />
+                                <field name="email" widget="email" />
+                                <field name="website" widget="url" />
+                                <field name="note" string="Notes" />
+                            </group>
                             <group string="Other Information" name="other_info">
                                 <field name="parent" attrs="{ 'invisible':[('age','>',17)] }" />
-                                <field name="marital_state" />
+                                <field name="marital_state" attrs="{'invisible':[('age','&lt;=',17)]}" />
                                 <field name="partner_name"
-                                    attrs="{'readonly':[('marital_state','in',('single'))],
+                                    attrs="{'invisible':[('marital_state','in',('single'))],
                                     'required':[('marital_state','in',('married'))]}" />
-                            </group>
-                            <group>
-                                <field name="note" />
                             </group>
                         </group>
                         <notebook>

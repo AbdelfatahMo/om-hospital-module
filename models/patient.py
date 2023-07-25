@@ -60,6 +60,10 @@ class HospitalPatient(models.Model):
     )
 
     image = fields.Image()
+    # Contact 
+    phone = fields.Char()
+    email = fields.Char()
+    website = fields.Char()
 
     note = fields.Text(
         string='Notes',
@@ -103,6 +107,22 @@ class HospitalPatient(models.Model):
         column2='patient_id',
     )
 
+    is_birthday = fields.Boolean(
+        string="Birthday ?",
+        compute='_compute_is_birthdate'
+    )
+
+    @api.depends('date_of_birth')
+    def _compute_is_birthdate(self):
+        for record in self:
+            if record.date_of_birth:
+                today = date.today()
+                if record.date_of_birth.day == today.day and record.date_of_birth.month == today.month:
+                    record.is_birthday = True
+                else:
+                    record.is_birthday = False
+            else:
+                record.is_birthday=False
     # change record in database
     # @api.onchange('date_of_birth')
     # def _onchange_date_of_birth(self):
@@ -113,6 +133,7 @@ class HospitalPatient(models.Model):
     #              (self.date_of_birth.month, self.date_of_birth.day))
 
     # not save record in database
+
     @api.depends('date_of_birth')
     def _compute_age(self):
         today = date.today()
@@ -128,17 +149,16 @@ class HospitalPatient(models.Model):
     def _inverse__compute_age(self):
         today = date.today()
         for record in self:
-            record.date_of_birth = today-relativedelta.relativedelta(years=record.age)
-            
+            record.date_of_birth = today - \
+                relativedelta.relativedelta(years=record.age)
+
     # search on compute field not have store = true
     def _search_age(self, operator, value):
-        today=date.today()
-        birth_date= today - relativedelta.relativedelta(years=value)
-        start_year=birth_date.replace(day=1,month=1)
-        end_year=birth_date.replace(day=31,month=12)
-        return [('birth_of_date', ">=", start_year),("birth_of_date", "<=", end_year)]
-    
-            
+        today = date.today()
+        birth_date = today - relativedelta.relativedelta(years=value)
+        start_year = birth_date.replace(day=1, month=1)
+        end_year = birth_date.replace(day=31, month=12)
+        return [('birth_of_date', ">=", start_year), ("birth_of_date", "<=", end_year)]
 
     @api.depends("appointment_ids")
     def _compute_appointment_count(self):

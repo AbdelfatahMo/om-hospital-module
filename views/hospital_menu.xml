@@ -51,7 +51,7 @@
     <menuitem
       id="hospital_operation_menu"
       name="Operations"
-      action="action_id"
+      action="hospital_operation_action"
       sequence="2" />
 
   </menuitem>
