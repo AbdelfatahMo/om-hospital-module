@@ -33,6 +33,12 @@
                     <header>
                     </header>
                     <sheet>
+                        <div class="oe_button_box" name="smart_button">
+                            <button name="action_view_appointment" type="object"
+                                class="oe_stat_button" icon="fa-th-list">
+                                <field name="appointment_count" string="Appointments" widget="statinfo" />
+                            </button>
+                        </div>
                         <div class="alert alert-info text-center o_form_header " role="alert"
                             attrs="{'invisible':[('is_birthday','=',False)]}">
                             <a class="close" data-dismiss="alert" href="#">X</a>
@@ -52,10 +58,9 @@
                             <group string="Patient personal info">
                                 <field name="national_id" />
                                 <field name="date_of_birth" />
-                                <field name="appointment_count" />
                                 <field name="is_birthday" invisible="1" />
                             </group>
-                            <group string="_" >
+                            <group string="_">
                                 <field name="age" />
                                 <field name="gender" invisible="context.get('hide_gender')"
                                     widget="radio" />
@@ -71,7 +76,8 @@
                             </group>
                             <group string="Other Information" name="other_info">
                                 <field name="parent" attrs="{ 'invisible':[('age','>',17)] }" />
-                                <field name="marital_state" attrs="{'invisible':[('age','&lt;=',17)]}" />
+                                <field name="marital_state"
+                                    attrs="{'invisible':[('age','&lt;=',17)]}" />
                                 <field name="partner_name"
                                     attrs="{'invisible':[('marital_state','in',('single'))],
                                     'required':[('marital_state','in',('married'))]}" />

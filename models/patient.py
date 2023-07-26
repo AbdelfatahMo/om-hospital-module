@@ -214,3 +214,14 @@ class HospitalPatient(models.Model):
 
     def name_get(self):
         return [(record.id, "[%s] %s" % (record.ref, record.name)) for record in self]
+
+    def action_view_appointment(self):
+        return {
+            'name':_('Appointments'),
+            'res_model':'hospital.appointment',
+            'view_mode':'list,form',
+            'context':{'default_patient_id':self.id},
+            'domain':[('patient_id','=',self.id)],
+            'target':'current',
+            'type':'ir.actions.act_window'
+        }
