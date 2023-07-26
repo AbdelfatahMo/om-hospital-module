@@ -43,6 +43,8 @@ class HospitalAppointment(models.Model):
         string='Booking Date',
         default=fields.Date.context_today,
     )
+    
+    duration= fields.Float(string="Duration")
 
     last_borrow_date = fields.Datetime(
         "Last Borrowed On",
@@ -66,6 +68,11 @@ class HospitalAppointment(models.Model):
                    ('cancel', 'Cancel')],
         string="Status",
         default='draft'
+    )
+    
+    progress = fields.Integer(
+        string="Progerss",
+        compute="_compute_progress"
     )
 
     doctor_id = fields.Many2one(
@@ -101,6 +108,19 @@ class HospitalAppointment(models.Model):
             }
         }
 
+    @api.depends("state")
+    def _compute_progress(self):
+        for record in self:
+            progress=0
+            if record.state=='draft':
+                progress=33
+            elif record.state=='in_consultation':
+                progress=66
+            elif record.state=='done':
+                progress=100
+            record.progress=progress
+                
+    
     @api.model
     def create(self, values):
         result = super(HospitalAppointment, self)

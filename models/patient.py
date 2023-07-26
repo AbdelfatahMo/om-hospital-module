@@ -162,10 +162,19 @@ class HospitalPatient(models.Model):
 
     @api.depends("appointment_ids")
     def _compute_appointment_count(self):
-        for record in self:
-            record.appointment_count = self.env["hospital.appointment"].search_count(
-                [("patient_id", "=", record.id)])
-
+        ## Search count method
+        # for record in self:
+        #     record.appointment_count = self.env["hospital.appointment"].search_count(
+        #         [("patient_id", "=", record.id)])
+        ## Read group method
+        appointment_groups=self.env["hospital.appointment"].read_group(domain=[],fields=["patient_id"],group_by=["patient_id"])
+        for appointment in appointment_groups:
+            print("..............", appointment)
+            patient_id=appointment.get("patient_id")[0]
+            patient_rec= self.browse(patient_id)
+            patient_rec.appointment_count=appointment.get("patient_id_count")
+            self-=patient_rec
+        self.appointment_count=0
     # Overrode create method from Model
 
     @api.constrains("date_of_birth")
