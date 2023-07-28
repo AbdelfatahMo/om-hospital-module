@@ -37,7 +37,7 @@ class HospitalPatient(models.Model):
     age = fields.Integer(
         string='Age',
         compute='_compute_age',
-        inverse='_inverse__compute_age',
+        # inverse='_inverse__compute_age',
         search='_search_age',
         store=True,
 
@@ -145,12 +145,12 @@ class HospitalPatient(models.Model):
             else:
                 rec.age = 0
 
-    @api.depends("age")
-    def _inverse__compute_age(self):
-        today = date.today()
-        for record in self:
-            record.date_of_birth = today - \
-                relativedelta.relativedelta(years=record.age)
+    # @api.depends("age")
+    # def _inverse__compute_age(self):
+    #     today = date.today()
+    #     for record in self:
+    #         record.date_of_birth = today - \
+    #             relativedelta.relativedelta(years=record.age)
 
     # search on compute field not have store = true
     def _search_age(self, operator, value):
@@ -167,9 +167,8 @@ class HospitalPatient(models.Model):
         #     record.appointment_count = self.env["hospital.appointment"].search_count(
         #         [("patient_id", "=", record.id)])
         ## Read group method
-        appointment_groups=self.env["hospital.appointment"].read_group(domain=[],fields=["patient_id"],group_by=["patient_id"])
+        appointment_groups=self.env["hospital.appointment"].read_group(domain=[],fields=["patient_id"],groupby=["patient_id"])
         for appointment in appointment_groups:
-            print("..............", appointment)
             patient_id=appointment.get("patient_id")[0]
             patient_rec= self.browse(patient_id)
             patient_rec.appointment_count=appointment.get("patient_id_count")
