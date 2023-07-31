@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- noupdate="1" Means no updates will apply if this records changed and upgrade module -->
+    <data noupdate="1">
+        <!-- forcecreate is true is the default which if the record has been deleted it will be created again -->
+        <record id="patient_tag_vip" model="patient.tag" forcecreate="0">
+            <field name="name">VIP</field>
+        </record>
 
-    <record id="patient_tag_vip" model="patient.tag">
-        <field name="name">VIP</field>
-    </record>
+        <record id="patient_tag_kid" model="patient.tag">
+            <field name="name">Kid</field>
+        </record>
 
-    <record id="patient_tag_kid" model="patient.tag">
-        <field name="name">Kid</field>
-    </record>
+        <record id="patient_tag_mr" model="patient.tag">
+            <field name="name">Mr</field>
+            <!-- For boolean fields -->
+            <field name="active" eval="True" />
+        </record>
 
-    <record id="patient_tag_mr" model="patient.tag">
-        <field name="name">Mr</field>
-        <!-- For boolean fields -->
-        <field name="active" eval="True" />
-    </record>
-
-
+    </data>
 </odoo>
