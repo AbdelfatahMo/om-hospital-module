@@ -32,14 +32,13 @@ class AppointmentPharmacyLines(models.Model):
         currency_field="currency_id",
     )
 
-        
     currency_id = fields.Many2one(
         comodel_name='res.currency',
         related="appointment_id.currency_id",
     )
 
+    
     @api.depends('quantity')
     def _compute_price_subtotal(self):
         for record in self:
             record.price_subtotal = record.quantity*record.unit_price
-            

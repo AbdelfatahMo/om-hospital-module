@@ -11,7 +11,7 @@
                 <calendar string="Appointments" date_start="booking_date" mode="month"
                     date_delay="duration" color="state" quick_add="False" hide_time="True"
                     event_open_popup="True" event_limit="5">
-                    <field name="patient_id" filters="1" avatar_field="image"/>
+                    <field name="patient_id" filters="1" avatar_field="image" />
                     <field name="state" invisible="1" filters="1" />
                 </calendar>
             </field>
@@ -59,10 +59,10 @@
                         simple >> shows demo data if no records need demo data in database
                         decoration >> color record 
                     -->
-                    <field name="patient_id" />
+                    <field name="patient_id" decoration-bf="1" />
                     <field name="doctor_id" widget="many2one_avatar_user" />
                     <field name="ref" optional="show" />
-                    <field name="gender" optional="hide" />
+                    <field name="gender" optional="hide" decoration-it="1" />
                     <field name="booking_date" />
                     <field name="activity_ids" widget='list_activity' />
                     <field name="appointment_time" />
@@ -73,6 +73,9 @@
                         decoration-danger="state == 'cancel'"
                         decoration-muted="state == 'draft'"
                         widget="badge" />
+                    <field name="currency_id" invisible="1"/>
+                    <field name="pharmacy_total_price" widget="monetary" 
+                        decoration-bf="1" decoration-it="1" />
                     <field name="progress" widget="progressbar" />
                     <!-- 
                         decoration-success green color
@@ -158,10 +161,10 @@
 
                             <group groups="base.group_no_one">
                                 <field name="hide_sales_price" />
-                                <button name="do_action" type="object" string="Print Name"
+                                <button name="do_action" type="object" string="Go to website"
                                     class="oe_highlight"
                                     help="Execute Python function"
-                                    confirm="Execute Python function ?" />
+                                    confirm="Redirect to the website ?" />
                                 <!-- <button name="%(om_hospital.appointment_act_window)d"
                                     type="action" string="Back" class="oe_highlight"
                                     confirm="Are you go to Patients pages"
@@ -187,12 +190,12 @@
                                     <tree string="Caption" create="true" delete="true"
                                         edit="true" editable="top">
                                         <field name="product_id" />
-                                        <field name="unit_price" widget="monetary" 
+                                        <field name="unit_price" widget="monetary"
                                             options="{'currency_field':'currency_id'}"
                                             attrs="{'column_invisible': [('parent.hide_sales_price', '=', 'true')]}" />
                                         <field name="quantity" />
                                         <field name="currency_id" groups="base.group_multi_currency" />
-                                        <field name="price_subtotal"/>
+                                        <field name="price_subtotal" />
                                     </tree>
 
                                     <form string="Caption" create="true" delete="true"
@@ -205,6 +208,12 @@
                                         </group>
                                     </form>
                                 </field>
+                                <group class="oe_subtotal_footer oe_right" colspan="2"
+                                    name="pharmacy_total">
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="pharmacy_total_price" widget="monetary" 
+                                        decoration-bf="1" decoration-it="1" />
+                                </group>
                             </page>
                         </notebook>
 

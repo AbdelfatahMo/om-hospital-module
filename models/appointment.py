@@ -110,6 +110,11 @@ class HospitalAppointment(models.Model):
         comodel_name='appointment.pharmacy.lines',
         inverse_name='appointment_id',
     )
+    
+    pharmacy_total_price = fields.Monetary(
+        currency_field="currency_id",
+        compute='_compute_pharmacy_total_price'
+    )
 
     hide_sales_price = fields.Boolean()
 
@@ -119,14 +124,24 @@ class HospitalAppointment(models.Model):
             self.ref = self.patient_id.ref
 
     def do_action(self):
+        # URL action
         return {
-            'effect': {
-                'fadeout': 'slow',  # to disappear automaticly
-                'message': "Done",  # message to put
-                # 'image': 'path', #to show custom image
-                'type': 'rainbow_man',
-            }
+            'type':'ir.actions.act_url',
+            # 'target':'self',
+            'target':'new',
+            'url':'http://localhost:8069/'
         }
+
+    
+
+    @api.depends('pharmacy_lines_ids')
+    def _compute_pharmacy_total_price(self):
+        total=0
+        for record in self:
+            if record.pharmacy_lines_ids:
+                for pharmacy in record.pharmacy_lines_ids:
+                    total += pharmacy.price_subtotal
+            record.pharmacy_total_price = total
 
     @api.depends("state")
     def _compute_progress(self):
@@ -174,3 +189,11 @@ class HospitalAppointment(models.Model):
 
     def action_done(self):
         self.state = 'done'
+        return {
+            'effect': {
+                'fadeout': 'slow',  # to disappear automaticly
+                'message': "Done",  # message to put
+                # 'image': 'path', #to show custom image
+                'type': 'rainbow_man',
+            }
+        }
