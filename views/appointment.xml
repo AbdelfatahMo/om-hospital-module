@@ -187,11 +187,12 @@
                                     <tree string="Caption" create="true" delete="true"
                                         edit="true" editable="top">
                                         <field name="product_id" />
-                                        <field name="unit_price"
+                                        <field name="unit_price" widget="monetary" 
+                                            options="{'currency_field':'currency_id'}"
                                             attrs="{'column_invisible': [('parent.hide_sales_price', '=', 'true')]}" />
                                         <field name="quantity" />
-                                        <field name="total"
-                                            attrs="{'column_invisible': [('parent.hide_sales_price', '=', True)]}" />
+                                        <field name="currency_id" groups="base.group_multi_currency" />
+                                        <field name="price_subtotal"/>
                                     </tree>
 
                                     <form string="Caption" create="true" delete="true"
@@ -200,7 +201,7 @@
                                             <field name="product_id" />
                                             <field name="unit_price" />
                                             <field name="quantity" />
-                                            <field name="total" />
+                                            <field name="price_subtotal" />
                                         </group>
                                     </form>
                                 </field>

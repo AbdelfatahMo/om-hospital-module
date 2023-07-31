@@ -16,7 +16,8 @@ class HospitalAppointment(models.Model):
     patient_id = fields.Many2one(
         comodel_name='hospital.patient',
         string='Patient',
-        ondelete='set null'
+        ondelete='set null',
+        tracking=1
     )
 
     gender = fields.Selection(
@@ -27,12 +28,13 @@ class HospitalAppointment(models.Model):
 
     ref = fields.Char(
         string='Reference',
-        tracking=True,
+        tracking=2,
         readonly=True,
     )
 
     prescription = fields.Html(
         string="Prescription",
+        tracking=9
     )
 
     appointment_time = fields.Datetime(
@@ -43,8 +45,10 @@ class HospitalAppointment(models.Model):
         string='Booking Date',
         default=fields.Date.context_today,
     )
-    
-    duration= fields.Float(string="Duration")
+
+    duration = fields.Float(
+        string="Duration"
+    )
 
     last_borrow_date = fields.Datetime(
         "Last Borrowed On",
@@ -67,9 +71,10 @@ class HospitalAppointment(models.Model):
                    ('done', 'Done'),
                    ('cancel', 'Cancel')],
         string="Status",
-        default='draft'
+        default='draft',
+        tracking=3
     )
-    
+
     progress = fields.Integer(
         string="Progerss",
         compute="_compute_progress"
@@ -78,12 +83,27 @@ class HospitalAppointment(models.Model):
     doctor_id = fields.Many2one(
         comodel_name='res.users',
         string='Doctor',
+        tracking=4,
     )
 
     operation_id = fields.Many2one(
         comodel_name="hospital.operation",
-        string="Operation"
+        string="Operation",
+        tracking=10,
     )
+    
+    company_id= fields.Many2one(
+        comodel_name="res.company",
+        default=lambda self: self.env.company,
+    )
+        
+    currency_id = fields.Many2one(
+        comodel_name='res.currency',
+        string='Currency',
+        related="company_id.currency_id",
+        tracking=True
+    )
+
 
     pharmacy_lines_ids = fields.One2many(
         string='Medicine',
@@ -91,7 +111,7 @@ class HospitalAppointment(models.Model):
         inverse_name='appointment_id',
     )
 
-    hide_sales_price = fields.Boolean()         
+    hide_sales_price = fields.Boolean()
 
     @api.onchange('patient_id')
     def _onchange_patient_id(self):
@@ -111,16 +131,15 @@ class HospitalAppointment(models.Model):
     @api.depends("state")
     def _compute_progress(self):
         for record in self:
-            progress=0
-            if record.state=='draft':
-                progress=33
-            elif record.state=='in_consultation':
-                progress=66
-            elif record.state=='done':
-                progress=100
-            record.progress=progress
-                
-    
+            progress = 0
+            if record.state == 'draft':
+                progress = 33
+            elif record.state == 'in_consultation':
+                progress = 66
+            elif record.state == 'done':
+                progress = 100
+            record.progress = progress
+
     @api.model
     def create(self, values):
         result = super(HospitalAppointment, self)

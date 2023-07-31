@@ -7,14 +7,12 @@ class AppointmentPharmacyLines(models.Model):
 
     product_id = fields.Many2one(
         comodel_name='product.product',
+        required=True,
     )
 
     unit_price = fields.Float(
         string="Unit Price",
         related='product_id.list_price',
-        readonly=True,
-        store=True
-
     )
 
     quantity = fields.Integer(
@@ -28,17 +26,20 @@ class AppointmentPharmacyLines(models.Model):
         string='Appointment',
     )
 
-    total = fields.Float(
-        string='Total',
-        compute='_compute_total',
-        readonly=True,
-        store=True
+    price_subtotal = fields.Monetary(
+        string='price_subtotal',
+        compute='_compute_price_subtotal',
+        currency_field="currency_id",
     )
 
-    @api.depends('unit_price', 'quantity')
-    def _compute_total(self):
-        if self.unit_price and self.quantity:
-            for record in self:
-                record.total = self.quantity*self.unit_price
-        else :
-            self.total=0
+        
+    currency_id = fields.Many2one(
+        comodel_name='res.currency',
+        related="appointment_id.currency_id",
+    )
+
+    @api.depends('quantity')
+    def _compute_price_subtotal(self):
+        for record in self:
+            record.price_subtotal = record.quantity*record.unit_price
+            
