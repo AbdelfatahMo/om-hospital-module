@@ -197,3 +197,15 @@ class HospitalAppointment(models.Model):
                 'type': 'rainbow_man',
             }
         }
+    
+    def action_send_whatsapp(self):
+        if not self.patient_id.phone:
+            raise ValidationError(_("Patient have not phone number."))
+        else:
+            message='Hi %s we are %s and pls remember your appointment %s'%(self.patient_id.name,self.env.company.name,self.appointment_time)
+            whatsapp_api_url = 'https://api.whatsapp.com/send?phone=%s&text=%s' %(self.patient_id.phone,message)
+            return {
+                'type':'ir.actions.act_url',
+                'target':'new',
+                'url':whatsapp_api_url,
+            }

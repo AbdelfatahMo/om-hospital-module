@@ -117,6 +117,8 @@
                             string="Cancel" context="{'hide_appointment':1}" states="draft" />
                         <!-- <button name="action_cancel" type="object" string="Cancel"
                         states="draft" /> -->
+                        <button string="Send WhatsApp Message" name="action_send_whatsapp" type="object" 
+                            class="oe_highlight" icon="fa-whatsapp"/>
                         <button
                             name="action_in_consultation" type="object" string="In Consultation"
                             states="draft" class="oe_highlight" />
