@@ -60,7 +60,7 @@ class HospitalPatient(models.Model):
     )
 
     image = fields.Image()
-    # Contact 
+    # Contact
     phone = fields.Char()
     email = fields.Char()
     website = fields.Char()
@@ -122,7 +122,7 @@ class HospitalPatient(models.Model):
                 else:
                     record.is_birthday = False
             else:
-                record.is_birthday=False
+                record.is_birthday = False
     # change record in database
     # @api.onchange('date_of_birth')
     # def _onchange_date_of_birth(self):
@@ -162,18 +162,19 @@ class HospitalPatient(models.Model):
 
     @api.depends("appointment_ids")
     def _compute_appointment_count(self):
-        ## Search count method
+        # Search count method
         # for record in self:
         #     record.appointment_count = self.env["hospital.appointment"].search_count(
         #         [("patient_id", "=", record.id)])
-        ## Read group method
-        appointment_groups=self.env["hospital.appointment"].read_group(domain=[],fields=["patient_id"],groupby=["patient_id"])
+        # Read group method
+        appointment_groups = self.env["hospital.appointment"].read_group(
+            domain=[], fields=["patient_id"], groupby=["patient_id"])
         for appointment in appointment_groups:
-            patient_id=appointment.get("patient_id")[0]
-            patient_rec= self.browse(patient_id)
-            patient_rec.appointment_count=appointment.get("patient_id_count")
-            self-=patient_rec
-        self.appointment_count=0
+            patient_id = appointment.get("patient_id")[0]
+            patient_rec = self.browse(patient_id)
+            patient_rec.appointment_count = appointment.get("patient_id_count")
+            self -= patient_rec
+        self.appointment_count = 0
     # Overrode create method from Model
 
     @api.constrains("date_of_birth")
@@ -214,13 +215,24 @@ class HospitalPatient(models.Model):
     def name_get(self):
         return [(record.id, "[%s] %s" % (record.ref, record.name)) for record in self]
 
+    @api.model
+    def name_search(self, name, args=None, operator='ilike', limit=100):
+        args = args or []
+        domain = []
+        if name:
+            domain = [
+                '|', ('name', operator, name), ('ref', operator, name)
+            ]
+        records = self.search(domain + args, limit=limit)
+        return records.name_get()
+
     def action_view_appointment(self):
         return {
-            'name':_('Appointments'),
-            'res_model':'hospital.appointment',
-            'view_mode':'list,form',
-            'context':{'default_patient_id':self.id},
-            'domain':[('patient_id','=',self.id)],
-            'target':'current',
-            'type':'ir.actions.act_window'
+            'name': _('Appointments'),
+            'res_model': 'hospital.appointment',
+            'view_mode': 'list,form',
+            'context': {'default_patient_id': self.id},
+            'domain': [('patient_id', '=', self.id)],
+            'target': 'current',
+            'type': 'ir.actions.act_window'
         }
