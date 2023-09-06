@@ -7,14 +7,13 @@
             <field name="type">ir.actions.act_window</field>
             <field name="name">Patient Appointments</field>
             <field name="res_model">hospital.appointment</field>
-            <field name="view_mode">tree,activity,calendar</field>
+            <field name="view_mode">tree,form,activity,calendar</field>
             <field name="help" type='html'>
                 <p class='o_view_nocontent_smiling_face'>
                     Create your first Appointment!
                 </p>
             </field>
         </record>
-
 
         <!-- Calender View -->
         <record id="appointment_view_calendar" model="ir.ui.view">
@@ -86,8 +85,8 @@
                         decoration-danger="state == 'cancel'"
                         decoration-muted="state == 'draft'"
                         widget="badge" />
-                    <field name="currency_id" invisible="1"/>
-                    <field name="pharmacy_total_price" widget="monetary" 
+                    <field name="currency_id" invisible="1" />
+                    <field name="pharmacy_total_price" widget="monetary"
                         decoration-bf="1" decoration-it="1" />
                     <field name="progress" widget="progressbar" />
                     <!-- 
@@ -98,7 +97,7 @@
                         decoration-warning orange color
                     -->
                     <!-- Done Button -->
-                    <button name="action_done" type="object" class="fa fa-check btn-success"
+                    <button name="action_done" string="" type="object" class="fa-check btn-success"
                         attrs="{'invisible':[('state','!=','in_consultation')]}" />
 
                     <!-- Cancel Button -->
@@ -130,8 +129,9 @@
                             string="Cancel" context="{'hide_appointment':1}" states="draft" />
                         <!-- <button name="action_cancel" type="object" string="Cancel"
                         states="draft" /> -->
-                        <button string="Send WhatsApp Message" name="action_send_whatsapp" type="object" 
-                            class="oe_highlight" icon="fa-whatsapp"/>
+                        <button string="Send WhatsApp Message" name="action_send_whatsapp"
+                            type="object"
+                            class="oe_highlight" icon="fa-whatsapp" />
                         <button
                             name="action_in_consultation" type="object" string="In Consultation"
                             states="draft" class="oe_highlight" />
@@ -180,6 +180,8 @@
                                     class="oe_highlight"
                                     help="Execute Python function"
                                     confirm="Redirect to the website ?" />
+                                <button string="Notification button" name="notification_action"
+                                    type="object" class="oe_highlight" groups="base.group_no_one" />
                                 <!-- <button name="%(om_hospital.appointment_act_window)d"
                                     type="action" string="Back" class="oe_highlight"
                                     confirm="Are you go to Patients pages"
@@ -225,8 +227,8 @@
                                 </field>
                                 <group class="oe_subtotal_footer oe_right" colspan="2"
                                     name="pharmacy_total">
-                                    <field name="currency_id" invisible="1"/>
-                                    <field name="pharmacy_total_price" widget="monetary" 
+                                    <field name="currency_id" invisible="1" />
+                                    <field name="pharmacy_total_price" widget="monetary"
                                         decoration-bf="1" decoration-it="1" />
                                 </group>
                             </page>
@@ -246,7 +248,6 @@
         </record>
 
 
-        
         <!-- Mark as Done action server -->
         <record id="action_mark_as_done" model="ir.actions.server">
             <field name="name">Mark as Done</field>

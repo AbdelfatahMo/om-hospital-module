@@ -1,5 +1,5 @@
 from datetime import date
-from odoo import models, fields, api, _
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -91,12 +91,12 @@ class HospitalAppointment(models.Model):
         string="Operation",
         tracking=10,
     )
-    
-    company_id= fields.Many2one(
+
+    company_id = fields.Many2one(
         comodel_name="res.company",
         default=lambda self: self.env.company,
     )
-        
+
     currency_id = fields.Many2one(
         comodel_name='res.currency',
         string='Currency',
@@ -104,13 +104,12 @@ class HospitalAppointment(models.Model):
         tracking=True
     )
 
-
     pharmacy_lines_ids = fields.One2many(
         string='Medicine',
         comodel_name='appointment.pharmacy.lines',
         inverse_name='appointment_id',
     )
-    
+
     pharmacy_total_price = fields.Monetary(
         currency_field="currency_id",
         compute='_compute_pharmacy_total_price'
@@ -126,17 +125,15 @@ class HospitalAppointment(models.Model):
     def do_action(self):
         # URL action
         return {
-            'type':'ir.actions.act_url',
+            'type': 'ir.actions.act_url',
             # 'target':'self',
-            'target':'new',
-            'url':'http://localhost:8069/'
+            'target': 'new',
+            'url': 'http://localhost:8069/'
         }
-
-    
 
     @api.depends('pharmacy_lines_ids')
     def _compute_pharmacy_total_price(self):
-        total=0
+        total = 0
         for record in self:
             if record.pharmacy_lines_ids:
                 for pharmacy in record.pharmacy_lines_ids:
@@ -197,15 +194,35 @@ class HospitalAppointment(models.Model):
                 'type': 'rainbow_man',
             }
         }
-    
+
     def action_send_whatsapp(self):
         if not self.patient_id.phone:
             raise ValidationError(_("Patient have not phone number."))
         else:
-            message='Hi %s we are %s and pls remember your appointment %s'%(self.patient_id.name,self.env.company.name,self.appointment_time)
-            whatsapp_api_url = 'https://api.whatsapp.com/send?phone=%s&text=%s' %(self.patient_id.phone,message)
+            message = 'Hi %s we are %s and pls remember your appointment %s' % (
+                self.patient_id.name, self.env.company.name, self.appointment_time)
+            whatsapp_api_url = 'https://api.whatsapp.com/send?phone=%s&text=%s' % (
+                self.patient_id.phone, message)
+            self.message_post(body=message, subject="Whatsapp Message")
             return {
-                'type':'ir.actions.act_url',
-                'target':'new',
-                'url':whatsapp_api_url,
+                'type': 'ir.actions.act_url',
+                'target': 'new',
+                'url': whatsapp_api_url,
             }
+
+    def notification_action(self):
+        action = self.env.ref('om_hospital.patient_act_window')
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _("Click to open patient record!"),
+                'message': '%s',
+                'type': 'success',
+                'sticky': False,
+                'links': [{
+                        'label': self.patient_id.name,
+                        'url': f'#action={action.id}&id={self.patient_id.id}&model=hospital.patient',
+                }],
+            }
+        }
