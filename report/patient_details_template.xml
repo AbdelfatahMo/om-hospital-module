@@ -9,6 +9,7 @@
                         <div class="oe_structure" />
                         <div class="row">
                             <div class="col-xs-8">
+
                                 <table class="table table-condensed"
                                     style="border: 3px solid black !important;">
                                     <tr>
@@ -57,6 +58,13 @@
                                                     </td>
                                                 </tr>
                                             </table>
+                                            <div>
+                                                <!-- QR code -->
+                                                <!-- <img t-att-src="'/report/barcode/QR/'+o.name" style="width:100px;height:100px" alt="Barcode"/> -->
+                                                <!-- Barcode -->
+                                                <img t-att-src="'/report/barcode/Code128/'+o.name" style="width:400;height:75px" alt="Barcode"/>
+                                                <!-- <span t-field="o.name" t-options="{'widget':'barcode', 'humanreadable': 1, 'width':400,'height':150}"/> -->
+                                            </div>
                                         </td>
                                     </tr>
                                 </table>
@@ -69,6 +77,9 @@
                             <table class="table table-sm o_main_table" name="appointment">
                                 <thead>
                                     <tr>
+                                        <th name="th_sl_no" class="text-start">
+                                            <span>SL_NO</span>
+                                        </th>
                                         <th name="th_ref" class="text-start">
                                             <span>Reference</span>
                                         </th>
@@ -85,7 +96,10 @@
                                     <t t-set="appointment_count" t-value="appointment_count + 1" />
                                     <tr>
                                         <td>
-                                            <span t-field="line.patient_id.name" />
+                                            <t t-esc="appointment_count" />
+                                        </td>
+                                        <td>
+                                            <span t-field="line.ref" />
                                         </td>
                                         <td>
                                             <span t-field="line.patient_id.age" />

@@ -206,6 +206,7 @@
                                         edit="true" editable="bottom" -->
                                     <tree string="Caption" create="true" delete="true"
                                         edit="true" editable="top">
+                                        <field name="sl_no" />
                                         <field name="product_id" />
                                         <field name="unit_price" widget="monetary"
                                             options="{'currency_field':'currency_id'}"
@@ -218,6 +219,7 @@
                                     <form string="Caption" create="true" delete="true"
                                         edit="true">
                                         <group>
+                                            <field name="sl_no" />
                                             <field name="product_id" />
                                             <field name="unit_price" />
                                             <field name="quantity" />

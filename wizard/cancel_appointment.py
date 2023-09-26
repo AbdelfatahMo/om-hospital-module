@@ -33,6 +33,13 @@ class CancelAppointmentWizard(models.TransientModel):
         if date.today() > allowed_cancel_date:
             raise ValidationError(_("can't cancel this appointment"))
         self.appointment_id.state="cancel"
+        query = """SELECT id,name FROM hospital_patient"""
+        self.env.cr.execute(query)
+        # or
+        self._cr.execute(query)
+        patients = self.env.cr.fetchall()
+        # For dictionary
+        patients = self.env.cr.dictfetchall()
         # Reload page to viusal changes to page
         # return {
         #     'type': 'ir.actions.client',

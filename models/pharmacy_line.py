@@ -37,6 +37,7 @@ class AppointmentPharmacyLines(models.Model):
         related="appointment_id.currency_id",
     )
 
+    sl_no = fields.Integer(string="SL_NO")
     
     @api.depends('quantity')
     def _compute_price_subtotal(self):

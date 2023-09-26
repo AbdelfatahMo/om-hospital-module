@@ -152,18 +152,26 @@ class HospitalAppointment(models.Model):
                 progress = 100
             record.progress = progress
 
+    def set_line_number(self):
+        num = 0
+        for line in self.pharmacy_lines_ids:
+            num += 1
+            line.sl_no = num
+    
     @api.model
     def create(self, values):
-        result = super(HospitalAppointment, self)
         values["sequence"] = self.env["ir.sequence"].next_by_code(
             "hospital.appointment")
-        return result.create(values)
+        result = super(HospitalAppointment, self).create(values)
+        result.set_line_number()
+        return result
 
     def write(self, values):
         res = super(HospitalAppointment, self)
         if not self.sequence:
             values["sequence"] = self.env["ir.sequence"].next_by_code(
                 "hospital.appointment")
+        self.set_line_number()
         return res.write(values)
 
     def unlink(self):
@@ -224,5 +232,12 @@ class HospitalAppointment(models.Model):
                         'label': self.patient_id.name,
                         'url': f'#action={action.id}&id={self.patient_id.id}&model=hospital.patient',
                 }],
+                # Move to form of patient
+                # 'next':{
+                #     'type' : 'ir.actions.act_window',
+                #     'res_model' : 'hospital.patient',
+                #     'res_id' : self.patient_id.id,
+                #     'views' : [(False, 'form')]
+                # }
             }
         }
